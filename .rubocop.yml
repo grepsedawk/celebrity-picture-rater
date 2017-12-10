@@ -1,0 +1,30 @@
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - vendor/**/*
+    - node_modules/**/*
+  DisplayCopNames: true
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - Guardfile
+    - config/environments/**/*
+    - config/initializers/devise.rb
+    - db/seeds.rb
+    - config/routes.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/*
+
+Metrics/AbcSize:
+  Exclude:
+    - db/migrate/*
+
+Metrics/LineLength:
+  Exclude:
+    - config/**/*
