@@ -1,11 +1,10 @@
-# README
+# celebrity-picture-rater
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Celebrity picture rater is a project designed to rate/rank pictures of various celebs. 
 
-Things you may want to cover:
+### Requirements
 
-* Ruby version
+* Ruby version x.x.x
 
 * System dependencies
 
