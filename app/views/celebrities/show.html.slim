@@ -1,1 +1,4 @@
 h1= @celebrity.name
+
+- @celebrity.pictures.each do |picture|
+  = image_tag picture.attachment.url
