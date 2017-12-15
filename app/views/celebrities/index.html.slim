@@ -2,4 +2,4 @@ h1 Celebrities
 
 ul
   - @celebrities.each do |celebrity|
-    li= celebrity.name
+    li= link_to celebrity.name, celebrity
