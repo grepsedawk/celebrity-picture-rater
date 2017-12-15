@@ -1,0 +1,14 @@
+language: ruby
+rvm:
+  - 2.4.2
+cache: bundler
+before_script:
+  - bundle exec bin/setup
+  - gem install brakeman
+  - gem install bundle-audit
+  - bundle-audit update
+script:
+  - bundle exec bin/rake
+  - bundle exec rubocop
+  - bundle exec brakeman -z
+  - bundle-audit
