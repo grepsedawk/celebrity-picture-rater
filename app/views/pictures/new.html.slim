@@ -1,0 +1,7 @@
+= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.css', integrity: 'sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=', crossorigin: 'anonymous'
+= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/basic.min.css', integrity: 'sha256-RvDmZ4ZtPtrWmZdibCa80jCE32m21xuR5SuW6zfJaW4=', crossorigin: 'anonymous'
+
+h1= link_to @celebrity.name, @celebrity
+= form_tag [@celebrity, @picture], class: 'dropzone'
+
+= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.js', integrity: 'sha256-eO9VTVeZLaplH86Iwt8l39+l7GZpLOTsVWYziS5oY0Q=', crossorigin: 'anonymous'
