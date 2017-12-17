@@ -1,4 +1,4 @@
-h1= @celebrity.name
+h1= "#{@celebrity.name} (#{@celebrity.pictures.count} pictures)"
 
 p= link_to t('pictures.upload'), new_celebrity_pictures_path(@celebrity)
 
