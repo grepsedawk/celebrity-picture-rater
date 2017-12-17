@@ -1,4 +1,6 @@
 h1= @celebrity.name
 
+p= link_to t('pictures.upload'), new_celebrity_pictures_path(@celebrity)
+
 - @celebrity.pictures.each do |picture|
   = image_tag picture.attachment.url
