@@ -648,6 +648,8 @@ GEM
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.0)
+    rspec_junit_formatter (0.3.0)
+      rspec-core (>= 2, < 4, != 2.12.0)
     rubocop (0.49.1)
       parallel (~> 1.10)
       parser (>= 2.3.3.1, < 3.0)
@@ -731,6 +733,7 @@ DEPENDENCIES
   puma (~> 3.7)
   rails!
   rspec-rails
+  rspec_junit_formatter
   rubocop
   sass-rails (~> 5.0)
   selenium-webdriver
