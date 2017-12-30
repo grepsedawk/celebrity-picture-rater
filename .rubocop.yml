@@ -28,3 +28,7 @@ Metrics/AbcSize:
 Metrics/LineLength:
   Exclude:
     - config/**/*
+
+Style/MixinUsage:
+  Exclude:
+    - bin/**/*

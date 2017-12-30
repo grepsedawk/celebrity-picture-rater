@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:2.4.1-node-browsers
+      - image: circleci/ruby:2.5-node-browsers
         environment:
           CI: true
       - image: circleci/postgres:latest
@@ -47,7 +47,7 @@ jobs:
 
       # run tests!
       - run:
-          name: run tests
+          name: Run Tests
           command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob 'spec/**/*_spec.rb' | circleci tests split --split-by=timings)"
@@ -56,6 +56,10 @@ jobs:
                               --out /tmp/test-results/rspec.xml \
                               --format progress \
               $(sed -e 's/\n/\\n/' -e 's/ /\ /' <<< "${TEST_FILES}")
+
+      - run:
+          name: Run Rubocop
+          command: bundle exec rubocop -P
 
       # collect reports
       - store_test_results:

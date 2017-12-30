@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PicturesController < ApplicationController
   def new
     @celebrity = Celebrity.find(params[:celebrity_id])

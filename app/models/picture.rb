@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Picture < ApplicationRecord
   belongs_to :celebrity
   has_attached_file :attachment

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CelebritiesController < ApplicationController
   def index
     @celebrities = Celebrity.all
