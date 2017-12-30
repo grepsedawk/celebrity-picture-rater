@@ -57,6 +57,10 @@ jobs:
                               --format progress \
               $(sed -e 's/\n/\\n/' -e 's/ /\ /' <<< "${TEST_FILES}")
 
+      - run:
+          name: Run Rubocop
+          command: bundle exec rubocop -P
+
       # collect reports
       - store_test_results:
           path: /tmp/test-results
