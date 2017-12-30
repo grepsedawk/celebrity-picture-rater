@@ -6,6 +6,7 @@ RSpec.describe 'Photo Uploads' do
   let(:celebrity) { FactoryBot.create(:celebrity, name: 'Taylor Swift') }
 
   scenario 'visitor uploads picture', js: true do
+    FactoryBot.create_list(:picture, 2, celebrity: celebrity)
     picture_count = Picture.count
     visit celebrity_path(celebrity)
 
