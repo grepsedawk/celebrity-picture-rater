@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2017_12_15_044018) do
+ActiveRecord::Schema.define(version: 2017_12_31_195023) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "celebrities", force: :cascade do |t|
@@ -32,5 +33,22 @@ ActiveRecord::Schema.define(version: 2017_12_15_044018) do
     t.index ["celebrity_id"], name: "index_pictures_on_celebrity_id"
   end
 
+  create_table "votes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "left_picture_id"
+    t.bigint "right_picture_id"
+    t.bigint "chosen_picture_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "celebrity_id"
+    t.index ["celebrity_id"], name: "index_votes_on_celebrity_id"
+    t.index ["chosen_picture_id"], name: "index_votes_on_chosen_picture_id"
+    t.index ["left_picture_id"], name: "index_votes_on_left_picture_id"
+    t.index ["right_picture_id"], name: "index_votes_on_right_picture_id"
+  end
+
   add_foreign_key "pictures", "celebrities"
+  add_foreign_key "votes", "celebrities"
+  add_foreign_key "votes", "pictures", column: "chosen_picture_id"
+  add_foreign_key "votes", "pictures", column: "left_picture_id"
+  add_foreign_key "votes", "pictures", column: "right_picture_id"
 end

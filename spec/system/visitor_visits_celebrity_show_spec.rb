@@ -6,11 +6,11 @@ RSpec.describe 'Visitor visits root route' do
   let(:celebrity) { FactoryBot.create(:celebrity, name: 'Taylor Swift') }
 
   before do
-    FactoryBot.create(:picture, celebrity: celebrity)
+    FactoryBot.create_list(:picture, 2, celebrity: celebrity)
     visit celebrity_path(celebrity)
   end
 
-  it "displays celebrity's name" do
+  it "displays celebrity's name", js: true do # js for screenshot
     expect(page.body).to include(celebrity.name)
   end
 

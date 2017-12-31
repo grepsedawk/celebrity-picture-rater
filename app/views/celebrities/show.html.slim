@@ -2,5 +2,13 @@ h1= "#{@celebrity.name} (#{@celebrity.pictures.count} pictures)"
 
 p= link_to t('pictures.upload'), new_celebrity_pictures_path(@celebrity)
 
-- @celebrity.pictures.each do |picture|
-  = image_tag picture.attachment.url
+#voting data={celebrity_id: @celebrity.id}
+
+= javascript_pack_tag 'voting'
+
+css:
+  img {
+    width: 300px;
+    cursor: pointer;
+    margin: 1em;
+  }
