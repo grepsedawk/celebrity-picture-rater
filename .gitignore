@@ -23,3 +23,6 @@
 /elm-stuff
 /node_modules
 /public/system
+/public/packs
+/public/packs-test
+/node_modules
