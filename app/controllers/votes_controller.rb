@@ -8,8 +8,8 @@ class VotesController < ApplicationController
     json = {
       celebrity_id: celebrity.id,
       uuid: vote.id,
-      left_picture_path: vote.left_picture.attachment.url,
-      right_picture_path: vote.right_picture.attachment.url
+      left_picture_path: vote.left_picture.attachment.url(:voting),
+      right_picture_path: vote.right_picture.attachment.url(:voting)
     }
 
     render json: json
