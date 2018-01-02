@@ -1,0 +1,6 @@
+h1= link_to @celebrity, celebrity_path(@celebrity)
+
+- @pictures.each_with_index do |picture, index|
+  p= "#{index + 1}. #{picture.votes.count} votes"
+  p= link_to t('pictures.download'), picture.attachment.url, target: :_blank
+  = image_tag picture.attachment.url(:leaderboard)
