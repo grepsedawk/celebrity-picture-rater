@@ -2,9 +2,10 @@
   "name": "celebrity_picture_rater",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "^3.0.2",
+    "@rails/webpacker": "^3.2.0",
     "coffeescript": "1.12.7",
     "elm": "^0.18.0",
+    "elm-format": "^0.6.1-alpha",
     "elm-webpack-loader": "^4.4.0"
   },
   "devDependencies": {
