@@ -10,26 +10,37 @@ At Mingos.io, we share a high volume of celebrity photos. We really wanted to fi
 
 ```plaintext
 ruby 2.5.0
-nodejs 8.9.3 # TODO make this true
+nodejs 8.9.3
+  - yarn
+postgres 9.6
 ```
 
+### Installing
 
-Things you may want to cover:
+Ensure all prerequisites are installed then run:
 
-* Ruby version
+```bash
+bin/setup
+```
 
-* System dependencies
+After that, you can run:
 
-* Configuration
+```bash
+bundle exec rails s
+```
 
-* Database creation
+To enable live reloading, you can run the `webpack-dev-server` with:
 
-* Database initialization
+```bash
+bin/webpack-dev-server
+```
 
-* How to run the test suite
+## Running the Tests
 
-* Services (job queues, cache servers, search engines, etc.)
+### RSpec
 
-* Deployment instructions
+Ensure you have `google-chrome` installed, then you can run the tests with `bundle exec rake`.
 
-* ...
+### Style Tests
+
+`rubocop` can run the style suite. All PRs require the style suite to pass 100% and the style suite is included in CI.
