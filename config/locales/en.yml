@@ -32,5 +32,6 @@
 en:
   pictures:
     upload: 'Upload Pictures'
+    leaderboard: 'Leaderboard'
   celebrities:
     vote: 'Vote Now'
