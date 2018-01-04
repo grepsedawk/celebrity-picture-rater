@@ -8,8 +8,16 @@ class Picture < ApplicationRecord
 
   scope :two_random, -> { order(Arel.sql('RANDOM()')).limit(2) }
   scope :top_ten, lambda {
-    joins(:votes).group(:id)
-                 .order('COUNT(votes.id) DESC')
-                 .limit(10)
+    joins(<<-SQL
+  LEFT JOIN votes ON votes.left_picture_id = pictures.id OR votes.right_picture_id = pictures.id
+          SQL
+         )
+      .group(:id)
+      .order(<<-SQL
+  SUM(CASE WHEN votes.chosen_picture_id = pictures.id THEN 1 ELSE 0 END) * 1.0 / COUNT(pictures.id) DESC,
+  COUNT(votes.id) DESC
+  SQL
+            )
+      .limit(10)
   }
 end
