@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (Html, div, p, text, button, img)
-import Html.Attributes exposing (src)
+import Html.Attributes exposing (src, class)
 import Html.Events exposing (onClick)
 import Keyboard
 import Json.Decode exposing (Decoder, nullable, string, int)
@@ -39,9 +39,13 @@ init flags =
 view : Model -> Html Message
 view model =
     div []
-        [ p [] [ text "Left or Right? Click or use left/right arrow keys to vote!" ]
-        , img [ src model.left_picture_path, onClick VoteLeft ] []
-        , img [ src model.right_picture_path, onClick VoteRight ] []
+        [ p []
+            [ text "Left or Right? Click or use left/right arrow keys to vote!" ]
+        , div
+            [ class "voting-images" ]
+            [ img [ src model.left_picture_path, onClick VoteLeft ] []
+            , img [ src model.right_picture_path, onClick VoteRight ] []
+            ]
         ]
 
 
