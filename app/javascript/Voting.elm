@@ -39,12 +39,9 @@ init flags =
 view : Model -> Html Message
 view model =
     div []
-        [ div [] [ p [] [ text "Left or Right? Click or use left/right arrow keys to vote!" ] ]
-        , div
-            []
-            [ img [ src model.left_picture_path, onClick VoteLeft ] []
-            , img [ src model.right_picture_path, onClick VoteRight ] []
-            ]
+        [ p [] [ text "Left or Right? Click or use left/right arrow keys to vote!" ]
+        , img [ src model.left_picture_path, onClick VoteLeft ] []
+        , img [ src model.right_picture_path, onClick VoteRight ] []
         ]
 
 
