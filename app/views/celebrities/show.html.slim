@@ -1,7 +1,9 @@
 h1= "#{@celebrity.name} (#{@celebrity.pictures.count} pictures)"
 
-p= link_to t('pictures.upload'), new_celebrity_pictures_path(@celebrity)
-p= link_to t('pictures.leaderboard'), celebrity_leaderboard_index_path(@celebrity)
+nav
+  = link_to t('pictures.upload'), new_celebrity_pictures_path(@celebrity)
+  '  -
+  = link_to t('pictures.leaderboard'), celebrity_leaderboard_index_path(@celebrity)
 
 #voting data={celebrity_id: @celebrity.id}
 
@@ -12,4 +14,8 @@ css:
     width: 300px;
     cursor: pointer;
     margin: 1em;
+  }
+
+  #voting {
+    text-align: center;
   }
