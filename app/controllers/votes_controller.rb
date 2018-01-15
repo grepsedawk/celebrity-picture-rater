@@ -3,7 +3,7 @@
 class VotesController < ApplicationController
   def new
     celebrity = Celebrity.find(params[:celebrity_id])
-    count = params[:count].to_i || 1
+    count = Integer(params.fetch(:count, 1))
     votes = celebrity.build_votes(count: count)
 
     render json: {
