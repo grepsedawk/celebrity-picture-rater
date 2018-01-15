@@ -8,7 +8,7 @@ class Celebrity < ApplicationRecord
     "#{name} (#{pictures.count} pictures)"
   end
 
-  def build_vote(params = nil)
-    Vote.build(params, celebrity: self)
+  def build_votes(params = nil, count: 1)
+    Array.new(count).map { Vote.build(params, celebrity: self) }
   end
 end

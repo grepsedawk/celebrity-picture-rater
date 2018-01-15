@@ -1,18 +1,24 @@
-module Main exposing (..)
+module Voting exposing (..)
 
-import Html exposing (Html, div, p, text, button, img)
-import Html.Attributes exposing (src, class)
+import Html exposing (Html, div, p, text, button, img, node)
+import Html.Attributes exposing (src, class, href, rel)
 import Html.Events exposing (onClick)
 import Keyboard
-import Json.Decode exposing (Decoder, nullable, string, int)
+import Json.Decode exposing (Decoder, nullable, string, int, list)
 import Json.Decode.Pipeline exposing (decode, required)
 import String exposing (toLower)
+import List exposing (head)
 import Http
 
 
 type alias Model =
     { celebrity_id : Int
-    , uuid : String
+    , votes : List Vote
+    }
+
+
+type alias Vote =
+    { uuid : String
     , left_picture_path : String
     , right_picture_path : String
     }
@@ -33,51 +39,88 @@ init flags =
         { celebrity_id } =
             flags
     in
-        ( Model celebrity_id "" "" "", getVote celebrity_id )
+        ( Model celebrity_id [], getVotes celebrity_id 3 )
 
 
 view : Model -> Html Message
 view model =
+    case head model.votes of
+        Nothing ->
+            div [] [ text "Loading..." ]
+
+        Just vote ->
+            div []
+                [ p []
+                    [ text "Left or Right? Click or use left/right arrow keys to vote!" ]
+                , div
+                    [ class "voting-images" ]
+                    [ img [ src vote.left_picture_path, onClick (SubmitVote Left) ] []
+                    , img [ src vote.right_picture_path, onClick (SubmitVote Right) ] []
+                    ]
+                , div [] (renderPrefetchVotes model.votes)
+                ]
+
+
+renderPrefetchVote : Vote -> Html Message
+renderPrefetchVote vote =
     div []
-        [ p []
-            [ text "Left or Right? Click or use left/right arrow keys to vote!" ]
-        , div
-            [ class "voting-images" ]
-            [ img [ src model.left_picture_path, onClick VoteLeft ] []
-            , img [ src model.right_picture_path, onClick VoteRight ] []
-            ]
+        [ node "link" [ rel "prefetch", href vote.left_picture_path ] []
+        , node "link" [ rel "prefetch", href vote.right_picture_path ] []
         ]
 
 
+renderPrefetchVotes : List Vote -> List (Html Message)
+renderPrefetchVotes votes =
+    List.map renderPrefetchVote votes
+
+
 type Message
-    = NewVote (Result Http.Error Model)
-    | VoteLeft
-    | VoteRight
+    = AddVotes (Result Http.Error (List Vote))
+    | SubmitVote Choice
+    | FinishVote (Result Http.Error Choice)
     | KeyMsg Keyboard.KeyCode
 
 
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
-        VoteLeft ->
-            ( model, submitVote model Left )
+        SubmitVote choice ->
+            case head model.votes of
+                Nothing ->
+                    ( model, Cmd.none )
 
-        VoteRight ->
-            ( model, submitVote model Right )
+                Just vote ->
+                    ( model, Cmd.batch [ submitVote model vote choice, getVotes model.celebrity_id 1 ] )
 
-        NewVote (Ok newModel) ->
-            ( newModel, Cmd.none )
+        FinishVote (Ok choice) ->
+            ( removeLastVote model, Cmd.none )
 
-        NewVote (Err _) ->
+        AddVotes (Ok newVotes) ->
+            ( { model | votes = model.votes ++ newVotes }, Cmd.none )
+
+        FinishVote (Err _) ->
+            ( model, Cmd.none )
+
+        AddVotes (Err _) ->
             ( model, Cmd.none )
 
         KeyMsg code ->
-            if code == 37 then
-                ( model, submitVote model Left )
-            else if code == 39 then
-                ( model, submitVote model Right )
-            else
-                ( model, Cmd.none )
+            case head model.votes of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just vote ->
+                    if code == 37 then
+                        ( model, Cmd.batch [ submitVote model vote Left, getVotes model.celebrity_id 1 ] )
+                    else if code == 39 then
+                        ( model, Cmd.batch [ submitVote model vote Right, getVotes model.celebrity_id 1 ] )
+                    else
+                        ( model, Cmd.none )
+
+
+removeLastVote : Model -> Model
+removeLastVote model =
+    { model | votes = List.drop 1 model.votes }
 
 
 subscriptions : Model -> Sub Message
@@ -95,39 +138,44 @@ main =
         }
 
 
-submitVote : Model -> Choice -> Cmd Message
-submitVote model choice =
+submitVote : Model -> Vote -> Choice -> Cmd Message
+submitVote model vote choice =
     let
         url =
             "/celebrities/"
                 ++ toString model.celebrity_id
                 ++ "/vote/"
-                ++ model.uuid
+                ++ vote.uuid
                 ++ "/"
                 ++ toLower (toString choice)
 
         request =
-            Http.get url decodeVote
+            Http.get url (Json.Decode.succeed choice)
     in
-        Http.send NewVote request
+        Http.send FinishVote request
 
 
-getVote : Int -> Cmd Message
-getVote celebrity_id =
+getVotes : Int -> Int -> Cmd Message
+getVotes celebrity_id count =
     let
         url =
-            "/celebrities/" ++ toString celebrity_id ++ "/vote/new"
+            "/celebrities/" ++ toString celebrity_id ++ "/vote/new?count=" ++ toString count
 
         request =
-            Http.get url decodeVote
+            Http.get url decodeVotes
     in
-        Http.send NewVote request
+        Http.send AddVotes request
 
 
-decodeVote : Decoder Model
+decodeVote : Decoder Vote
 decodeVote =
-    decode Model
-        |> required "celebrity_id" (int)
+    decode Vote
         |> required "uuid" (string)
         |> required "left_picture_path" (string)
         |> required "right_picture_path" (string)
+
+
+decodeVotes : Decoder (List Vote)
+decodeVotes =
+    decode identity
+        |> required "votes" (list decodeVote)
