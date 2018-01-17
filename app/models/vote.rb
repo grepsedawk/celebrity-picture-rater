@@ -15,4 +15,12 @@ class Vote < ApplicationRecord
       vote.save!
     end
   end
+
+  def as_json(*)
+    {
+      uuid: id,
+      left_picture_path: left_picture.attachment.url(:voting),
+      right_picture_path: right_picture.attachment.url(:voting)
+    }
+  end
 end

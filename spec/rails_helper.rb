@@ -57,22 +57,4 @@ RSpec.configure do |config|
   config.before(:each, type: :system, js: true) do
     driven_by :headless_chrome
   end
-
-  # System Spec Screenshots after all JS enabled tests:
-  def save_spec_screenshot(page, meta)
-    spec_file_name = File.basename(meta[:file_path])
-    line_number = meta[:line_number]
-
-    timestamp = Time.now.strftime('%Y-%m-%d-%H-%M-%S')
-    filename = "#{spec_file_name}-#{line_number}-#{timestamp}.png"
-
-    page.save_screenshot(filename)
-  end
-
-  config.after do |example|
-    if example.metadata[:js]
-      save_spec_screenshot(Capybara.page, example.metadata)
-    end
-    Capybara.reset_sessions!(fake: false)
-  end
 end
