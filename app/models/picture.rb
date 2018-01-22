@@ -12,6 +12,7 @@ class Picture < ApplicationRecord
   LEFT JOIN votes ON votes.left_picture_id = pictures.id OR votes.right_picture_id = pictures.id
           SQL
          )
+      .where.not(id: 214)
       .group(:id)
       .order(<<-SQL
   SUM(CASE WHEN votes.chosen_picture_id = pictures.id THEN 1 ELSE 0 END) * 1.0 / COUNT(pictures.id) DESC,
