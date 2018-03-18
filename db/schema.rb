@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2017_12_31_195023) do
+ActiveRecord::Schema.define(version: 2018_03_18_175322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -51,4 +51,37 @@ ActiveRecord::Schema.define(version: 2017_12_31_195023) do
   add_foreign_key "votes", "pictures", column: "chosen_picture_id"
   add_foreign_key "votes", "pictures", column: "left_picture_id"
   add_foreign_key "votes", "pictures", column: "right_picture_id"
+
+  create_view "picture_points",  sql_definition: <<-SQL
+      SELECT point_results.winning_picture_id,
+      point_results.celebrity_id,
+      count(*) AS points
+     FROM ( SELECT
+                  CASE
+                      WHEN (picture_wins.least_picture_wins > picture_wins.greatest_picture_wins) THEN picture_wins.least_picture_id
+                      WHEN (picture_wins.greatest_picture_wins > picture_wins.least_picture_wins) THEN picture_wins.greatest_picture_id
+                      ELSE NULL::bigint
+                  END AS winning_picture_id,
+              picture_wins.celebrity_id
+             FROM ( SELECT LEAST(votes.left_picture_id, votes.right_picture_id) AS least_picture_id,
+                      GREATEST(votes.left_picture_id, votes.right_picture_id) AS greatest_picture_id,
+                      COALESCE(sum(
+                          CASE votes.chosen_picture_id
+                              WHEN LEAST(votes.left_picture_id, votes.right_picture_id) THEN 1
+                              ELSE NULL::integer
+                          END), (0)::bigint) AS least_picture_wins,
+                      COALESCE(sum(
+                          CASE votes.chosen_picture_id
+                              WHEN GREATEST(votes.left_picture_id, votes.right_picture_id) THEN 1
+                              ELSE NULL::integer
+                          END), (0)::bigint) AS greatest_picture_wins,
+                      votes.celebrity_id
+                     FROM votes
+                    GROUP BY LEAST(votes.left_picture_id, votes.right_picture_id), GREATEST(votes.left_picture_id, votes.right_picture_id), votes.celebrity_id
+                    ORDER BY (count(*)) DESC) picture_wins) point_results
+    WHERE (point_results.winning_picture_id IS NOT NULL)
+    GROUP BY point_results.winning_picture_id, point_results.celebrity_id
+    ORDER BY (count(*)) DESC;
+  SQL
+
 end
