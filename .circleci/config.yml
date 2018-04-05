@@ -61,6 +61,10 @@ jobs:
           name: Run Rubocop
           command: bundle exec rubocop -P
 
+      - run:
+          name: Checking and Fixing Vulnerable Gems
+          command: bin/vulnerability-autofix
+
       # collect reports
       - store_test_results:
           path: /tmp/test-results
