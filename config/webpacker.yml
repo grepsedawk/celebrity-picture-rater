@@ -15,15 +15,13 @@ default: &default
 
   extensions:
     - .elm
-    - .coffee
-    - .erb
     - .js
-    - .jsx
-    - .ts
-    - .vue
     - .sass
     - .scss
     - .css
+    - .module.sass
+    - .module.scss
+    - .module.css
     - .png
     - .svg
     - .gif
