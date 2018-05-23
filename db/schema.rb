@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_18_175322) do
+ActiveRecord::Schema.define(version: 2018_05_23_190352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -49,8 +49,8 @@ ActiveRecord::Schema.define(version: 2018_03_18_175322) do
   add_foreign_key "pictures", "celebrities"
   add_foreign_key "votes", "celebrities"
   add_foreign_key "votes", "pictures", column: "chosen_picture_id"
-  add_foreign_key "votes", "pictures", column: "left_picture_id"
-  add_foreign_key "votes", "pictures", column: "right_picture_id"
+  add_foreign_key "votes", "pictures", column: "left_picture_id", on_delete: :cascade
+  add_foreign_key "votes", "pictures", column: "right_picture_id", on_delete: :cascade
 
   create_view "picture_points",  sql_definition: <<-SQL
       SELECT point_results.winning_picture_id,

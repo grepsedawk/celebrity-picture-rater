@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Picture, type: :model do
   let(:celebrity) { FactoryBot.create(:celebrity, name: 'Taylor Swift') }
 
-  it 'can be deleted when it has votes' do
+  it 'can be deleted when it is voted on but not chosen' do
     FactoryBot.create_list(:picture, 2, celebrity: celebrity)
     left = Picture.first
     right = Picture.last
@@ -14,7 +14,7 @@ RSpec.describe Picture, type: :model do
     vote.celebrity = celebrity
     vote.left_picture_id = left.id
     vote.right_picture_id = right.id
-    vote.chosen_picture_id = left.id
+    vote.chosen_picture_id = right.id
     vote.save!
 
     expect { left.destroy }.not_to raise_error
